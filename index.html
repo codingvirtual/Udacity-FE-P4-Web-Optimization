@@ -5,12 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content=" FILL ME IN ">
     <meta name="author" content=" FILL ME IN ">
+    <!-- attempt to add cache control to cache content for 1 week -->
     <meta http-equiv="CACHE-CONTROL" CONTENT="max-age=604800">
+
     <title>Cameron Pittman: Portfolio</title>
 
-    <link href="css/print.css" rel="stylesheet" media="print" >
-    <style>
+    <!--    eliminated font loading tag and replaced with JS code at bottom of
+            body -->
 
+    <!-- add media query to print.css stylesheet to avoid loading for scrn -->
+    <link href="css/print.css" rel="stylesheet" media="print" >
+
+    <!--    eliminate reference to external stylesheet since it was small.
+            Inlined all of it and eliminated one set of rules that were
+            not being used -->
+    <style>
         html {
             font-size: 100%;
             overflow-y: scroll;
@@ -59,11 +68,11 @@
             body { font-size: 12px;}
             header p { padding-left: 4.5em;}
         }
-
-
     </style>
 
-
+    <!--    Perfmatters.js : inlined this code instead of external reference
+            Kept in head to ensure accurate measurements otherwise load
+            times would likely not compute correctly -->
 
     <script> function logCRP() {
             var t = window.performance.timing, dcl = t.domContentLoadedEventStart - t.domLoading, complete = t.domComplete - t.domLoading;
@@ -78,6 +87,11 @@
 
 <body>
 <header>
+    <!--    add width and height specs to all images to optimize layout
+            also replaced 2 images with optimized versions that PageSpeed
+            Insights offered up. Could have done same thing with Grunt
+            tools -->
+
     <a href="/"><img src="img/profilepic.jpg" width="70" height="70"></a>
 
     <p>Cameron Pittman<br><span>Course Developer</span></p>
@@ -95,6 +109,7 @@
     <div class="content">
         <ul>
             <li>
+
                 <img src="https://lh4.ggpht.com/kJEnfqhPvtm4m3EneSZ4fWYGS8lW4YNhEjk6zPkyrQaBUHc-2Y_ElDic99NHI0h-UBLXVbRCjFybFvrWxdk=s100"
                      width="100" height="50">
                 <a href="project-2048.html">Build Your Own 2048!</a>
@@ -132,6 +147,8 @@
 <footer>
     <p>&copy; Web Performance 2014 <span id="crp-stats"></span></p>
 </footer>
+
+<!-- JS to load fonts without blocking the CRP -->
 <script type="text/javascript">
     WebFontConfig = {
         google: { families: [ 'Open+Sans:400italic,400,700:latin' ] }
@@ -145,8 +162,12 @@
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(wf, s);
     })(); </script>
+
+<!-- moved analytics out of head -->
 <script src="http://www.google-analytics.com/analytics.js" async
         defer></script>
+
+<!-- moved this out of head  -->
 <script>
     (function (w, g) {
         w['GoogleAnalyticsObject'] = g;
