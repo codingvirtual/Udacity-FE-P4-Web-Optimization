@@ -11,6 +11,8 @@ body {
     font-size: 14px;
     line-height: 1.61;
     font-weight: 400;
+    background: #fff;
+    font-weight: 400;
 }
 
 body, button, input, select, textarea {
@@ -36,7 +38,7 @@ a:hover, a:active {
 }
 
 b, strong {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 pre, code {
@@ -52,10 +54,6 @@ ul, ol {
 img {
     border: 0;
     max-width: 100%;
-}
-
-body {
-    background: #fff;
 }
 
 header, footer, .container {
@@ -75,13 +73,12 @@ header img {
 
 header p {
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: 700;
     padding-left: 4em;
 }
 
 header p span {
     font-size: 0.8em;
-    font-weight: normal;
 }
 
 .hero {
