@@ -65,8 +65,7 @@
     </style>
 
 
-    <script src="http://www.google-analytics.com/analytics.js" async
-            defer></script>
+
     <script> function logCRP() {
             var t = window.performance.timing, dcl = t.domContentLoadedEventStart - t.domLoading, complete = t.domComplete - t.domLoading;
             var stats = document.getElementById("crp-stats");
@@ -134,6 +133,8 @@
 <footer>
     <p>&copy; Web Performance 2014 <span id="crp-stats"></span></p>
 </footer>
+<script src="http://www.google-analytics.com/analytics.js" async
+        defer></script>
 <script>
     (function (w, g) {
         w['GoogleAnalyticsObject'] = g;
