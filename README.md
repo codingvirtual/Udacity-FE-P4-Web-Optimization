@@ -110,6 +110,43 @@ the pizza animations over to the HTML5 Canvas would yield the greatest gains
 in performance, but that's only speculation.
 
 
+Part 2: Optimize pizza slider size redraw functionality
+
+For the 2nd part of the Part 2 optimization, the goal was to reduce the
+time to redraw the menu pizzas (which are different than the background
+"scrolling" pizzas" when the user adjusts the size slider near the top of
+the page. Target is <5ms to redraw as reported in the console.
+
+Multiple optimizations were made to achieve this target:
+    a.  As before, an array was created to hold the pizza elements to allow
+        for faster access. This eliminated the need to query the DOM to do
+        a resize since all elements would be neatly contained in the array.
+        
+        To build the array, I had to prepopulate it with the two hard-coded
+        pizzas that were in the index.html file and had id's of pizza0 and
+        pizza1. Rather than further hard-code this in the JS, I elected
+        to use getElementsByClassName('randomPizzaContainer') to find any
+        and all hard-coded pizzas and add them to the menuPizzas array.
+        
+        Further down in the code, there is a function call that randomnly
+        generates each pizza on the menu. I added a single line to the
+        end of that function that pushes the newly created menu item
+        to the menuPizzas array. This also contributed to eliminating the DOM
+        query.
+    b.  With this array in place, resizing the pizzas became a matter of simply
+        iterating over the array and changing the width attribute to the new
+        size. 
+    c.  To achieve some slight additional optimization, there were serveral
+        variable declarations contained inside for loop bodies that were
+        really static (meaning that the value of those variables was constant
+        during each iteration of the loop, so there was no reason to calculate
+        them inside the loop). Rather, I pulled those initializations out of
+        the for loops and tried to reduce the body of the loop to code that
+        actually needed to run for each pizza.
+    d.  Finally, there were a couple of places that I replaced querySelector
+        calls with getElementBy... calls to improve performance.
+
+
 #### -B- Project Files ####
 The repo contains two sets of all of the files. At the top level of the repo
 you will find the "final" version of the project. Pointing your browser at
