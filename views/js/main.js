@@ -546,9 +546,15 @@ window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding scrollPizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function () {
+    // Calculate precise number of pizzas needed. Original algorithm painted
+    // 8 cols worth of pizzas, spaced 256 pixels apart, and there were
+    // 9 rows per col (i % cols will generate a value between 0 and 9 for
+    // all loops where i >=9).
     var cols = 8;
-    var s = 318;
-    for (var i = 0; i < 40; i++) {
+    var s = 256;
+    var rows = Math.floor((window.innerHeight / s)) * 8
+    var numPizzas = rows * cols * 9;
+    for (var i = 0; i < numPizzas; i++) {
         var elem = document.createElement('img');
         elem.className = 'mover';
         elem.src = "images/pizza.png";
