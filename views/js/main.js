@@ -16,8 +16,17 @@ Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
 
-// As you may have realized, this website randomly generates pizzas.
+// As you may have realized, this website randomly generates scrollPizzas.
 // Here are arrays of all possible pizza ingredients.
+
+// Create an array to hold the pizza elements. This will eliminate the DOM
+// entirely. See also the addEventListener modifications at the bottom of
+// this file.
+var scrollPizzas = [];
+var menuPizzas = [];
+var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
+var pizzaSize = document.querySelector("#pizzaSize");
+
 var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -395,6 +404,9 @@ var pizzaElementGenerator = function(i) {
   pizzaDescriptionContainer.appendChild(ul);
   pizzaContainer.appendChild(pizzaDescriptionContainer);
 
+  // Add this pizza container to the array for easier access later.
+  menuPizzas.push(pizzaContainer);
+
   return pizzaContainer;
 };
 
@@ -406,13 +418,13 @@ var resizePizzas = function(size) {
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        pizzaSize.innerHTML = "Small";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        pizzaSize.innerHTML = "Medium";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        pizzaSize.innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -424,7 +436,6 @@ var resizePizzas = function(size) {
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
-    var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
     var oldsize = oldwidth / windowwidth;
 
     // TODO: change to 3 sizes? no more xl?
@@ -450,10 +461,11 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    // All pizza containers are the same size, so calculate dx & newwidth once.
+    var dx = determineDx(menuPizzas[0], size);
+    var newwidth = (menuPizzas[0].offsetWidth + dx) + 'px';
+    for (var i = 0; i < menuPizzas.length; i++) {
+      menuPizzas[i].style.width = newwidth;
     }
   }
 
@@ -469,22 +481,24 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+// Move this outside the for loop - not necessary to get the same element
+// on each iteration.
+var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
-// User Timing API again. These measurements tell you how long it took to generate the initial pizzas
+// User Timing API again. These measurements tell you how long it took to generate the initial scrollPizzas
 window.performance.mark("mark_end_generating");
 window.performance.measure("measure_pizza_generation", "mark_start_generating", "mark_end_generating");
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
-// Iterator for number of times the pizzas in the background have scrolled.
+// Iterator for number of times the scrollPizzas in the background have scrolled.
 // Used by updatePositions() to decide when to log the average time per frame
 var frame = 0;
 
-// Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
+// Logs the average amount of time per 10 frames needed to move the sliding background scrollPizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
   var numberOfEntries = times.length;
   var sum = 0;
@@ -494,15 +508,12 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   console.log("Average time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
-// Create an array to hold the pizza elements. This will eliminate the DOM
-// entirely. See also the addEventListener modifications at the bottom of
-// this file.
-var pizzas = [];
 
-// The following code for sliding background pizzas was pulled from Ilya's demo found at:
+
+// The following code for sliding background scrollPizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
-// Moves the sliding background pizzas based on scroll position
+// Moves the sliding background scrollPizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
@@ -511,11 +522,11 @@ function updatePositions() {
   // for loop and was a needless repeated computation.
   var position = document.body.scrollTop / 1250;
 
-  for (var i = 0; i < pizzas.length; i++) {
+  for (var i = 0; i < scrollPizzas.length; i++) {
     var phase = Math.sin(position + (i % 5));
-    // Iterate over the pizzas array, which contains all of the added
+    // Iterate over the scrollPizzas array, which contains all of the added
     // pizza elements.
-    pizzas[i].style.left = pizzas[i].basicLeft + 100 * phase + 'px';
+    scrollPizzas[i].style.left = scrollPizzas[i].basicLeft + 100 * phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -536,11 +547,11 @@ window.addEventListener('scroll', updatePositions);
 // that was already going on. Since an empty pizza[] array was created above,
 // the idea is to push each new pizza element onto that array at the moment
 // of creation - this reduces overall computation time.
-// Additionally, through experimentation, it took approximately 40 pizzas
-// to create roughly the same effect as the 200 pizzas took, so there
-// are now only 40 pizzas created in the loop below.
+// Additionally, through experimentation, it took approximately 40 scrollPizzas
+// to create roughly the same effect as the 200 scrollPizzas took, so there
+// are now only 40 scrollPizzas created in the loop below.
 
-// Generates the sliding pizzas when the page loads.
+// Generates the sliding scrollPizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 318;
@@ -555,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector("#movingPizzas1").appendChild(elem);
 
     // push the newly created element into the array for easy access later
-    pizzas.push(elem);
+    scrollPizzas.push(elem);
   }
   updatePositions();
 });
