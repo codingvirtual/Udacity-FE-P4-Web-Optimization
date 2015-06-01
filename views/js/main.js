@@ -453,7 +453,7 @@ var resizePizzas = function (size) {
         // The size slider was set to a viable value, so now calculate
         // new box dimensions. Again, I eliminated the function call and
         // instead leveraged a literal array in place. Easier to read.
-        var newsize = [.25, .3333, .5][size - 1];
+        var newsize = [0.25, 0.3333, 0.5][size - 1];
         var dx = (newsize - oldsize) * windowwidth;
         var newwidth = (menuPizzas[0].offsetWidth + dx) + 'px';
     }
@@ -461,7 +461,8 @@ var resizePizzas = function (size) {
     // The new size info is now available. Next, iterate over all the pizza
     // elements in the array and adjust the size. DOM query was eliminated
     // entirely, yielding <1ms render time.
-    for (var i = 0; i < menuPizzas.length; i++) {
+    var loopEnd = menuPizzas.length;
+    for (var i = 0; i < loopEnd; i++) {
         menuPizzas[i].style.width = newwidth;
     }
     window.performance.mark("mark_end_resize");
@@ -552,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // all loops where i >=9).
     var cols = 8;
     var s = 256;
-    var rows = Math.floor((window.innerHeight / s)) * 8
+    var rows = Math.floor((window.innerHeight / s)) * 8;
     var numPizzas = rows * cols * 9;
     for (var i = 0; i < numPizzas; i++) {
         var elem = document.createElement('img');
