@@ -553,8 +553,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // all loops where i >=9).
     var cols = 8;
     var s = 256;
-    var rows = Math.floor((window.innerHeight / s)) * 8;
-    var numPizzas = rows * cols * 9;
+    // Calculate number of rows by dividing window visible height by 256,
+    // the spacing vertically between rows. Round UP to ensure the bottom
+    // row gets created in all circumstances.
+    var rows = Math.ceil((window.innerHeight / s));
+    // total number of pizzas required is simply rows x cols
+    var numPizzas = rows * cols;
     for (var i = 0; i < numPizzas; i++) {
         var elem = document.createElement('img');
         elem.className = 'mover';
